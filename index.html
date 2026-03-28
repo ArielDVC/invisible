@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invisible Encoder</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="bg-base-200 min-h-screen flex items-center justify-center p-4">
+    <div class="card w-full max-w-2xl bg-base-100 shadow-xl">
+        <div class="card-body space-y-4">
+            <h1 class="text-2xl font-bold text-center">Invisible Encoder</h1>
+            <div role="tablist" class="tabs tabs-boxed">
+                <a role="tab" class="tab tab-active" onclick="showTab('encode')">
+                    <i class="fa-solid fa-lock mr-1"></i> Codificar
+                </a>
+                <a role="tab" class="tab" onclick="showTab('decode')">
+                    <i class="fa-solid fa-unlock mr-1"></i> Decodificar
+                </a>
+            </div>
+            <div id="encodeTab">
+                <textarea id="encodeInput" class="textarea textarea-bordered w-full h-32"
+                    placeholder="Escribe texto para ocultar..."></textarea>
+                <button onclick="encodeText()" class="btn btn-primary w-full mt-2">
+                    Codificar
+                </button>
+            </div>
+            <div id="decodeTab" class="hidden">
+                <textarea id="decodeInput" class="textarea textarea-bordered w-full h-32"
+                    placeholder="Pega texto invisible..."></textarea>
+                <button onclick="decodeText()" class="btn btn-secondary w-full mt-2">
+                    Decodificar
+                </button>
+            </div>
+            <div>
+                <label class="label">
+                    <span class="label-text font-semibold">Resultado</span>
+                </label>
+                <textarea id="output" class="textarea textarea-bordered w-full h-28" readonly></textarea>
+                <button onclick="copyOutput()" class="btn btn-accent w-full mt-2">
+                    <i class="fa-solid fa-copy mr-1"></i> Copiar resultado
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast toast-top toast-end hidden">
+        <div class="alert alert-success">
+            <span>Copiado al portapapeles</span>
+        </div>
+    </div>
+    <script src="./invisible-encoder.js"></script>
+    <script>
+        // Tabs
+        function showTab(tab) {
+            document.getElementById("encodeTab").classList.toggle("hidden", tab !== "encode");
+            document.getElementById("decodeTab").classList.toggle("hidden", tab !== "decode");
+            const tabs = document.querySelectorAll(".tab");
+            tabs[0].classList.toggle("tab-active", tab === "encode");
+            tabs[1].classList.toggle("tab-active", tab === "decode");
+        }
+        // Acciones
+        function encodeText() {
+            const input = document.getElementById("encodeInput").value;
+            document.getElementById("output").value = InvisibleEncoder.encode(input);
+        }
+        function decodeText() {
+            const input = document.getElementById("decodeInput").value;
+            document.getElementById("output").value = InvisibleEncoder.decode(input);
+        }
+        function copyOutput() {
+            const text = document.getElementById("output").value;
+            navigator.clipboard.writeText(text);
+            const toast = document.getElementById("toast");
+            toast.classList.remove("hidden");
+            setTimeout(() => toast.classList.add("hidden"), 2000);
+        }
+    </script>
+</body>
+
+</html>
